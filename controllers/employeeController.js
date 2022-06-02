@@ -201,6 +201,7 @@ exports.maintainTable = async (req, res) => {
   console.log(d);
   try {
     // let goneEmp = await Employee.deleteMany().where("DOR").ne(null).gte(d);
+    let deleted = [];
     let goneEmp = await Employee.find();
     for (let i of goneEmp) {
       if (i.DOR) {
@@ -211,13 +212,14 @@ exports.maintainTable = async (req, res) => {
         console.log(dat1.getFullYear(), dat1.getMonth(), dat1.getDate());
         console.log(dat1 + "\n" + i.DOR);
         if (dat1 > i.DOR) {
+          deleted.push(i);
           i.remove();
         }
       }
     }
     res.status(200).json({
       status: "success",
-      data: goneEmp,
+      data: deleted,
     });
   } catch (error) {
     res.status(500).json({
